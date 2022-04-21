@@ -12,7 +12,17 @@ const bcrypt = require('bcrypt');
 
 // create our User model
 // extends from sequelize model class
-class User extends Model {}
+class User extends Model {
+
+    // we are creating an instance method, to use on each instance of User
+    checkPassword(loginPw) {
+        // we use bcrypt's compare() method, and we are using 
+        // the synchronous version even though async is typically
+        // better for servers
+        // we pass in the plaintext password and the hashed password
+        return bcrypt.compareSync(loginPw, this.password);
+    }
+}
 
 // define table columns and configuration
 // initializes mode's data/configuration

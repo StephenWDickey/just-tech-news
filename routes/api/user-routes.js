@@ -4,7 +4,7 @@ const router = require('express').Router();
 const { User } = require('../../models');
 
 
-///////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
 
 // GET request for / endpoint
@@ -61,7 +61,7 @@ router.get('/:id', (req, res) => {
 });
 
 
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 
 // POST request for / endpoint
@@ -86,7 +86,50 @@ router.post('/', (req, res) => {
 });
 
 
-///////////////////////////////////////
+// create POST request for /login endpoint
+router.post('/login', (req, res) => {
+    // we find a matching email
+    User.findOne({
+
+        where: {
+
+            email: req.body.email
+        }
+    })
+        // we take data from findOne() Sequelize method   
+        .then(dbUserData => {
+            // if there is no matching email we send 400, bad request
+            if (!dbUserData) {
+
+                res.status(400).json({ message: 'No user with that email address!' });
+                
+                return;
+
+            }
+
+            // Verify user
+            // we call our checkPassword instance method we created
+            // in User.js, we pass in user's password (it is plaintext)
+            // it will compare the plaintext password to the hashed instance
+            const validPassword = dbUserData.checkPassword(req.body.password);
+
+            // the compare() method from bsync will return a boolean value
+            // if the value is not true
+            if (!validPassword) {
+                res.status(400).json({ message: 'Incorrect password.' });
+            }
+
+            // if the value is true, we send userData
+            res.json({ user: dbUserData, message: "You are logged in." });
+
+
+    });
+
+});
+
+
+/////////////////////////////////////////////////////////////////////////
+
 // *** remember an HTTP 500 error is different from 404
 // *** 404 error means server has not found anything
 // *** 400 error is a bad request, usually client side
