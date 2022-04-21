@@ -1,7 +1,8 @@
 
-// import Model class, DataTypes object from Sequelize
+// import Model class, DataTypes object from Sequelize module
 const { Model, DataTypes } = require('sequelize');
 
+// we require our connection to our db
 const sequelize = require('../config/connection');
 
 // create our User model
