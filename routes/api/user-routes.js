@@ -105,6 +105,9 @@ router.put('/:id', (req, res) => {
     //                             WHERE id = ?;
     User.update(req.body, {
 
+        // because we used beforeUpdate() hook in User model
+        // we must make individualHooks = true
+        individualHooks: true,
         // we pass in object as argument, define id value as req.params.id
         where: {
             id: req.params.id
