@@ -1,7 +1,7 @@
 
 const router = require('express').Router();
 
-const { User } = require('../../models');
+const { User, Post, Vote } = require('../../models');
 
 
 //////////////////////////////////////////////////////////////
@@ -39,6 +39,21 @@ router.get('/:id', (req, res) => {
         // we have two objects being passed in as arguments in findOne()
         // again, we want to protect password information
         attributes: {exclude: ['password']},
+
+        // we are going to include info from the post model
+        include:[
+            {
+                model: Post,
+                attributes: ['id', 'title', 'post_url', 'created_at']
+            },
+            {
+                // now we are going to see the posts that have been voted on
+                model: Post,
+                attributes: ['title'],
+                through: Vote,
+                as: 'voted_posts'
+            }
+        ],
 
         // now we want to find the one data point that has this value
         where: {

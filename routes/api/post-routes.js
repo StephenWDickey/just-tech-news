@@ -1,10 +1,10 @@
 
-
+const sequelize = require('../../config/connection');
 
 const router = require('express').Router();
 
 
-const { Post, User } = require('../../models');
+const { Post, User, Vote } = require('../../models');
 
 
 ///////////////////////////////////////////////////////
@@ -18,7 +18,8 @@ router.get('/', (req, res) => {
 
         // we pass in our post attributes that we defined in Post.js
         // created_at is auto-generated
-        attributes: ['id', 'post_url', 'title', 'created_at'],
+        // we use sequelize.literal to count votes, return as vote_count
+        attributes: ['id', 'post_url', 'title', 'created_at', [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']],
 
         // we want to include our User table
         // we have it give us the username attribute from the user table
@@ -49,7 +50,8 @@ router.get('/:id', (req, res) => {
         where: {
             id: req.params.id
         },
-        attributes: ['id', 'post_url', 'title', 'created_at'],
+        // sequelize.literal for vote_count
+        attributes: ['id', 'post_url', 'title', 'created_at', [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']],
         // order will allow us to designate how the posts are ordered
         // here we put them in descending order based on creation time
         order: [['created_at', 'DESC']],
@@ -97,6 +99,43 @@ router.post('/', (req, res) => {
 ////////////////////////////////////////////////////////////
 
 
+
+// create a PUT request for the posts/upvote endpoint!
+// must put this before /:id because Express will think /upvote is an id
+// PUT /api/posts/upvote
+router.put('/upvote', (req, res) => {
+// create the vote
+    Vote.create({
+        user_id: req.body.user_id,
+        post_id: req.body.post_id
+    }).then(() => {
+        // then find the post we just voted on
+        return Post.findOne({
+            where: {
+                id: req.body.post_id
+            },
+            attributes: [
+                'id',
+                'post_url',
+                'title',
+                'created_at',
+                // use raw MySQL aggregate function query to get a count of how many votes the post has and return it under the name `vote_count`
+                [
+                // this will count the votes on the post, then we define it
+                // as 'vote_count'
+                sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
+                'vote_count'
+                ]
+            ]
+        })
+            .then(dbPostData => res.json(dbPostData))
+            .catch(err => {
+                console.log(err);
+                res.status(400).json(err);
+            })
+    })
+})
+
 // PUT request for posts/:id endpoint
 router.put('/:id', (req, res) => {
     // update method for PUT requests
@@ -122,6 +161,9 @@ router.put('/:id', (req, res) => {
             res.status(500).json(err);
         });
 });
+
+
+
 
 
 //////////////////////////////////////////////////////////
