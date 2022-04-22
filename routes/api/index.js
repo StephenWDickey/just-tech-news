@@ -3,15 +3,20 @@
 
 // import router from Express.js
 const router = require('express').Router();
+
+
 // import our GET, POST, DELETE, and PUT requests for users
 const userRoutes = require('./user-routes.js');
 
+// import post routes
+const postRoutes = require('./post-routes');
 
 ////////////////////////////////////////////////////////
 
 
 // we write /users so all of our userRoutes endpoints have this before
 router.use('/users', userRoutes);
+router.use('/posts', postRoutes);
 
 
 ////////////////////////////////////////////////////////
