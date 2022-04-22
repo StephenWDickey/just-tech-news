@@ -3,9 +3,11 @@
 
 const User = require('./User');
 
+const Post = require('./Post');
+
 
 //////////////////////////////////////////
 
 
 // export our models!
-module.exports = { User };
+module.exports = { User, Post };
