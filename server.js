@@ -44,6 +44,6 @@ app.use(routes);
 // sync method is a Sequelize method, it is like app.listen for the db
 // the we write our actual app.listen expression for the server
 // force: true would drop and recreate all of our tables on startup
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
     app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
 });

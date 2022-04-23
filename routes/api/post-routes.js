@@ -4,7 +4,7 @@ const sequelize = require('../../config/connection');
 const router = require('express').Router();
 
 
-const { Post, User, Vote } = require('../../models');
+const { Post, User, Vote, Comment } = require('../../models');
 
 
 ///////////////////////////////////////////////////////
@@ -25,6 +25,17 @@ router.get('/', (req, res) => {
         // we have it give us the username attribute from the user table
         // include: is like saying JOIN in SQL
         include: [
+            // include the Comment model here:
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                // we must attach user model
+                // so we can attach username to comments
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            },
             {
                 model: User,
                 attributes: ['username']
@@ -56,6 +67,16 @@ router.get('/:id', (req, res) => {
         // here we put them in descending order based on creation time
         order: [['created_at', 'DESC']],
         include: [
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                // we must attach user model
+                // so we can attach username to comments
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            },
             {
                 model: User,
                 attributes: ['username']

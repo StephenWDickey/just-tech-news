@@ -11,12 +11,15 @@ const userRoutes = require('./user-routes.js');
 // import post routes
 const postRoutes = require('./post-routes');
 
+const commentRoutes = require('./comment-routes');
+
 ////////////////////////////////////////////////////////
 
 
 // we write /users so all of our userRoutes endpoints have this before
 router.use('/users', userRoutes);
 router.use('/posts', postRoutes);
+router.use('/comments', commentRoutes);
 
 
 ////////////////////////////////////////////////////////

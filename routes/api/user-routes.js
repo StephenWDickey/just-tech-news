@@ -47,6 +47,16 @@ router.get('/:id', (req, res) => {
                 attributes: ['id', 'title', 'post_url', 'created_at']
             },
             {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'created_at'],
+                // we must attach user model
+                // so we can attach username to comments
+                include: {
+                    model: Post,
+                    attributes: ['title']
+                }
+            },
+            {
                 // now we are going to see the posts that have been voted on
                 model: Post,
                 attributes: ['title'],
