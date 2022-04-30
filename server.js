@@ -5,10 +5,24 @@
 const express = require('express');
 
 // we import all of our routes with the /routes folder
-const routes = require('./routes');
+const routes = require('./controllers');
 
 // we must import our connection to the database
 const sequelize = require('./config/connection');
+
+
+// we require path to get access to css
+// path allows us to interact with file system
+// it provides 'path segment separator'
+
+const path = require ('path');
+
+
+// we import express-handlebars package
+const exphbs = require('express-handlebars');
+// we use the create() method of handlebars
+const hbs = exphbs.create({});
+
 
 // import express method so we can chain other methods to it
 // this is our main instance of the express server running, all other
@@ -23,12 +37,25 @@ const PORT = process.env.PORT || 3001;
 ////////////////////////////////////////////////////////////
 
 
+// we establish handlebars as our template engine
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
+
+//////////////////////////////////////////////////////////////
+
+
+
 // middleware expressions
 // we use json data for req.body
 app.use(express.json());
 // we accept arrays/objects within arrays/objects
 app.use(express.urlencoded({ extended: true }));
-
+// express.static() is a middleware method
+// takes contents of a folder and:
+// 'serves them as static assets'
+// in this case these are our front-end files
+app.use(express.static(path.join(__dirname, 'public')));
 
 ////////////////////////////////////////////////////////////////
 
@@ -44,6 +71,6 @@ app.use(routes);
 // sync method is a Sequelize method, it is like app.listen for the db
 // the we write our actual app.listen expression for the server
 // force: true would drop and recreate all of our tables on startup
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
     app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
 });
