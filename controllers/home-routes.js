@@ -7,10 +7,14 @@ const { Post, User, Comment } = require('../models');
 
 
 
+////////////////////////////////////////////////////////////////////
+
 
 
 router.get('/', (req, res) => {
 
+    // console log the session variables
+    console.log(req.session);
 
     // we want to retrive all our posts
     // on our homepage
@@ -67,5 +71,20 @@ router.get('/', (req, res) => {
             res.status(500).json(err);
         });
 });
+
+
+router.get('/login', (req, res) => {
+    if (req.session.loggedIn) {
+        res.redirect('/');
+        return;
+    }
+    // we dont need 2nd argument for render method
+    // because we dont need any variables
+    res.render('login');
+});
+
+
+/////////////////////////////////////////////////////////
+
 
 module.exports = router;

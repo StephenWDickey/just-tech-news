@@ -102,7 +102,18 @@ router.post('/', (req, res) => {
         email: req.body.email,
         password: req.body.password
     })
-        .then(dbUserData => res.json(dbUserData))
+    // we update .then callback with session info
+    // req.session.save() initiates creation of session
+    // then runs callback
+    .then(dbUserData => {
+        req.session.save(() => {
+            req.session.user_id = dbUserData.id;
+            req.session.username = dbUserData.username;
+            req.session.loggedIn = true;
+    
+            res.json(dbUserData);
+        });
+    })
         .catch(err => {
             console.log(err);
             res.status(500).json(err);
@@ -142,16 +153,41 @@ router.post('/login', (req, res) => {
             // if the value is not true
             if (!validPassword) {
                 res.status(400).json({ message: 'Incorrect password.' });
+                return;
             }
 
-            // if the value is true, we send userData
-            res.json({ user: dbUserData, message: "You are logged in." });
+            req.session.save(() => {
+                //declare session variables
+                req.session.user_id = dbUserData.id;
+                req.session.username = dbUserData.username;
+                req.session.loggedIn = true;
+                
+                // if the value is true, we send userData
+                res.json({ user: dbUserData, message: "You are logged in." });
+            });
+
+            
 
 
     });
 
 });
 
+
+
+router.post('/logout', (req, res) => {
+    if (req.session.loggedIn) {
+
+        // destroy method clears session
+        req.session.destroy(() => {
+            // 204 status code for destroyed session
+            res.status(204).end();
+        });
+    }
+    else {
+        res.status(404).end();
+    }
+});
 
 /////////////////////////////////////////////////////////////////////////
 
