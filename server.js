@@ -17,11 +17,12 @@ const sequelize = require('./config/connection');
 
 const path = require ('path');
 
+const helpers = require('./utils/helpers');
 
 // we import express-handlebars package
 const exphbs = require('express-handlebars');
 // we use the create() method of handlebars
-const hbs = exphbs.create({});
+const hbs = exphbs.create({ helpers });
 
 
 // import express method so we can chain other methods to it

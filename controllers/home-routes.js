@@ -65,7 +65,9 @@ router.get('/', (req, res) => {
             // this returns objects with more simple info and puts them in an array
             const posts = dbPostData.map(post => post.get({ plain: true }));
             
-            res.render('homepage', { posts });
+            res.render('homepage', { 
+              posts,
+              loggedIn: req.session.loggedIn });
         })
         .catch(err => {
             console.log(err);
@@ -112,7 +114,9 @@ router.get('/post/:id', (req, res) => {
         const post = dbPostData.get({ plain: true });
   
         // pass data to template
-        res.render('single-post', { post });
+        res.render('single-post', { 
+          post,
+          loggedIn: req.session.loggedIn });
       })
       .catch(err => {
         console.log(err);
