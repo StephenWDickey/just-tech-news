@@ -3,6 +3,7 @@ const router = require('express').Router();
 
 const { User, Post, Vote } = require('../../models');
 
+const withAuth = require('../../utils/auth');
 
 //////////////////////////////////////////////////////////////
 
@@ -90,7 +91,7 @@ router.get('/:id', (req, res) => {
 
 
 // POST request for / endpoint
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
     
     // create method is from sequelize's model class
     // we can pass in key/value pairs where the keys are those defined
@@ -175,7 +176,7 @@ router.post('/login', (req, res) => {
 
 
 
-router.post('/logout', (req, res) => {
+router.post('/logout', withAuth, (req, res) => {
     if (req.session.loggedIn) {
 
         // destroy method clears session
@@ -198,7 +199,7 @@ router.post('/logout', (req, res) => {
 
 // PUT request (update request) for user based on id
 // remember this involves manipulating req.body as well as req.params
-router.put('/:id', (req, res) => {
+router.put('/:id', withAuth, (req, res) => {
 
     // if req.body has exact key/value pairs to match the model, 
     // you can just use `req.body` instead
@@ -248,7 +249,7 @@ router.put('/:id', (req, res) => {
 
 
 // DELETE request for user based on id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
 
     // we use destroy method from Sequelize's model class
     // pass in object as argument, specify id as req.params.id

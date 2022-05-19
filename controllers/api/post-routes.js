@@ -3,6 +3,7 @@ const sequelize = require('../../config/connection');
 
 const router = require('express').Router();
 
+const withAuth = require('../../utils/auth');
 
 const { Post, User, Vote, Comment } = require('../../models');
 
@@ -101,12 +102,12 @@ router.get('/:id', (req, res) => {
 
 
 // POST request for posts/ endpoint
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
     // user create method to create post
     Post.create({
         title: req.body.title,
         post_url: req.body.post_url,
-        user_id: req.body.user_id
+        user_id: req.session.user_id
     })
         .then(dbPostData => res.json(dbPostData))
         .catch(err => {
@@ -124,7 +125,7 @@ router.post('/', (req, res) => {
 // create a PUT request for the posts/upvote endpoint!
 // must put this before /:id because Express will think /upvote is an id
 // PUT /api/posts/upvote
-router.put('/upvote', (req, res) => {
+router.put('/upvote', withAuth, (req, res) => {
     // make sure the session exists first
     if (req.session) {
       // pass session id along with all destructured properties on req.body
@@ -138,7 +139,7 @@ router.put('/upvote', (req, res) => {
   });
 
 // PUT request for posts/:id endpoint
-router.put('/:id', (req, res) => {
+router.put('/:id', withAuth, (req, res) => {
     // update method for PUT requests
     Post.update(
         {
@@ -171,7 +172,7 @@ router.put('/:id', (req, res) => {
 
 
 // DELETE request for posts/:id endpoint
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
     // destroy method for deletion
     Post.destroy({
         where: {
