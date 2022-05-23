@@ -1,5 +1,5 @@
 async function logout() {
-    const response = await fetch('/api/users/logout', {
+    const response = await fetch('https://pacific-brushlands-06734.herokuapp.com/api/users/logout', {
         method: 'post',
         headers: { 'Content-Type': 'application/json' }
     });

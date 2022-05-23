@@ -4,7 +4,7 @@ async function editFormHandler(event) {
         window.location.toString().split('/').length - 1
     ];
     const title = document.querySelector('input[name="post-title"]').value.trim();
-    const response = await fetch(`/api/posts/${id}`, {
+    const response = await fetch(`https://pacific-brushlands-06734.herokuapp.com/api/posts/${id}`, {
       method: 'put',
       body: JSON.stringify({
         title

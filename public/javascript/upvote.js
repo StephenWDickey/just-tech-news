@@ -7,7 +7,7 @@ async function upvoteClickHandler(event) {
       window.location.toString().split('/').length - 1
     ];
   
-    const response = await fetch('/api/posts/upvote', {
+    const response = await fetch('https://pacific-brushlands-06734.herokuapp.com/api/posts/upvote', {
         method: 'PUT',
         body: JSON.stringify({
           post_id: id
