@@ -22,7 +22,7 @@ async function loginFormHandler(event) {
     }
   }
   
-  document.querySelector('.login-form').addEventListener('submit', loginFormHandler);
+  document.querySelector('.loginBtn').addEventListener('click', loginFormHandler);
 
 
 
@@ -59,4 +59,4 @@ async function signupFormHandler(event) {
     }
 }
 
-document.querySelector('.signup-form').addEventListener('submit', signupFormHandler);
+document.querySelector('.submitBtn').addEventListener('click', signupFormHandler);
