@@ -91,7 +91,7 @@ router.get('/:id', (req, res) => {
 
 
 // POST request for / endpoint
-router.post('/', withAuth, (req, res) => {
+router.post('/', (req, res) => {
     
     // create method is from sequelize's model class
     // we can pass in key/value pairs where the keys are those defined
